@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>競輪予想</title>
+</head>
+<body>
+    <h1>競輪予想サイト</h1>
+    <form method="POST" action="/predict">
+        <textarea name="data" rows="8" cols="40" placeholder="例：
+山田,89.4,12,29,0.25,0.55
+佐藤,90.1,10,32,0.30,0.60"></textarea><br>
+        <button type="submit">予測する</button>
+    </form>
+
+    {% if results %}
+        <h2>予測結果</h2>
+        <ol>
+        {% for name, score in results %}
+            <li>{{ name }}（スコア: {{ '%.2f'|format(score) }}）</li>
+        {% endfor %}
+        </ol>
+    {% endif %}
+</body>
+</html>
