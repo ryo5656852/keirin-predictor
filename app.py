@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request
 import numpy as np
 import joblib
+import os
 
 app = Flask(__name__)
-model = joblib.load("model.pkl")  # モデルは別途用意が必要
+model_path = "model.pkl"
+model = joblib.load(model_path) if os.path.exists(model_path) else None
 
 @app.route("/")
 def index():
@@ -12,6 +14,8 @@ def index():
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
+        if model is None:
+            return "モデルがロードされていません。"
         data = request.form["data"]
         lines = data.strip().split("\n")
         features = [list(map(float, line.split(",")[1:])) for line in lines]
@@ -23,4 +27,4 @@ def predict():
         top3 = results[:3]
         return render_template("index.html", results=top3)
     except Exception as e:
-        return f"エラーが発生しました: {str(e)}"
+        return f"エラー: {str(e)}"
